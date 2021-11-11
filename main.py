@@ -6,8 +6,8 @@ app = FastAPI(title="HostelParser")
 
 
 @app.get("/relocation/data")
-def parse_specialities(city:str=None):
+def parse_specialities():
     try:
-        return JSONResponse({'content': parse(city)})
+        return JSONResponse({'content': parse()})
     except ValueError as e:
         return JSONResponse(status_code=500)

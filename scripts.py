@@ -26,15 +26,17 @@ def parse_2gis(city:str) -> list:
     housings = []
     for hid in data:
         housings.append({
-            'type': data[hid].get('type', 0), 
-            'address': data[hid].get('address_name', ''), 
-            'phone': data[hid].get('phone', ''), 
+            'type': data[hid].get('type', 0),
+            'address': data[hid].get('address_name', ''),
+            'phone': data[hid].get('phone', ''),
+            'city': data[hid].get('city', ''),
             'uni': data[hid].get('university_name', ''),
         })
     return housings
 
 
-def parse(city:str) -> list:
+def parse(city_list) -> list:
     housings = []
-    housings.extend(parse_2gis(city))
+    for city_name in city_list:
+        yield housings.extend(parse_2gis(city_name))
     return housings
