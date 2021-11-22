@@ -1,42 +1,19 @@
 import requests
-import re
+import os
 
 
-def compare(first:str, second:str) -> bool:
-    pattern = r'[\s!.,\\|/_\-*%$#@]+'
-    first = re.sub(pattern, '', first.lower())
-    second = re.sub(pattern, '', second.lower())
-    return ((first == second) or (first in second) or (second in first))
-
-
-def get_data_from(url:str) -> dict:
-    data = requests.get(url).json()
-    # print(data, type(data))
-    return data
-
-
-def merge_similar(housings:list) -> list:
-    """Removes repeated"""
+def parse_from_api() -> list:
+    url = os.environ.get('HOUSING_API_URL')
+    querystring = {"query":'ukraine', "locale":"uk"}
+    headers = {
+        'x-rapidapi-host': os.environ.get('HOUSING_API_HOST'),
+        'x-rapidapi-key': os.environ.get('HOUSING_API_KEY'),
+        }
+    response = requests.request("GET", url, headers=headers, params=querystring)
+    housings = response.text.get('items', [])
     return housings
 
 
-def parse_2gis(city:str) -> list:
-    url = f'https://catalog.api.2gis.com/3.0/items?city_id=141373143515660&key=YOUR_KEY'  # https://www.booking.com/
-    data = get_data_from(url).get('result', {}).get('items', [])
-    housings = []
-    for hid in data:
-        housings.append({
-            'type': data[hid].get('type', 0),
-            'address': data[hid].get('address_name', ''),
-            'phone': data[hid].get('phone', ''),
-            'city': data[hid].get('city', ''),
-            'uni': data[hid].get('university_name', ''),
-        })
-    return housings
-
-
-def parse(city_list) -> list:
-    housings = []
-    for city_name in city_list:
-        yield housings.extend(parse_2gis(city_name))
+def parse() -> list:
+    housings = yield parse_from_api()
     return housings
