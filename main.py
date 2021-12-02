@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from scripts import parse
@@ -15,4 +16,4 @@ def parse_specialities():
 
 
 if __name__ == '__main__':
-    uvicorn.run(app, port=8090, host='localhost')
+    uvicorn.run(app, port=os.environ.get('PORT', 8090), host='localhost')
