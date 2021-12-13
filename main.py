@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from scripts import parse
 import uvicorn
+import os
 
 app = FastAPI(title='HousingParser')
 
